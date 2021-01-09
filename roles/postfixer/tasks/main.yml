@@ -65,6 +65,7 @@
       DB_NAME: "{{ postfixer_db_name }}"
       DB_USER: "{{ postfixer_db_user }}"
       DB_PASSWORD: "{{ postfixer_db_password }}"
+      LIMIT_DOMAINS_TO: "{{ postfixer_allowed_domains|join(',') }}"
 
     published_ports:
       - "127.0.0.1:{{ _postfix_host_port }}:8000"

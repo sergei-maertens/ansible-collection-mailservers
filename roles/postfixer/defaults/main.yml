@@ -17,3 +17,5 @@ postfixer_db_password: postfix
 
 postfixer_hostname: postfixer.example.com
 # postfixer_secret_key: change-mde
+
+postfixer_allowed_domains: []
