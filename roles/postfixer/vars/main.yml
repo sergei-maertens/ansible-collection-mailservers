@@ -2,3 +2,5 @@
 
 __postfixer_base_volumes:
   - "{{ postfixer_name_prefix }}-logs:/app/log:rw"
+
+__postfixer_db_socket_volume: "{{ postfixer_db_host }}:/var/run/postgresql/"

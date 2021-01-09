@@ -13,7 +13,7 @@
 
 - name: Determine volumes to mount
   set_fact:
-    _postfix_container_volumes: "{{ __postfixer_base_volumes + [postfixer_db_host] }}"
+    _postfix_container_volumes: "{{ __postfixer_base_volumes + [__postfixer_db_socket_volume] }}"
   when: postfixer_db_host.startswith('/')
 
 - name: Inspect app container
