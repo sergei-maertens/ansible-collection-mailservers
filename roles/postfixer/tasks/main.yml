@@ -16,15 +16,15 @@
     _postfix_container_volumes: "{{ __postfixer_base_volumes + [postfixer_db_host] }}"
   when: postfixer_db_host.startswith('/')
 
-- name: Determine existing published port
+- name: Inspect app container
   docker_container_info:
     name: "{{ postfixer_name_prefix }}-web"
-  register: docker_container
+  register: postfixer_container
 
 - name: Define existing published port
   set_fact:
-    postfixer_port: docker_container.container.HostConfig.PortBindings['8000/tcp'].HostPort
-  when: docker_container.exists and not postfixer_port is defined
+    postfixer_port: "{{ postfixer_container.container.NetworkSettings.Ports['8000/tcp'][0].HostPort }}"
+  when: postfixer_container.exists and not postfixer_port is defined
 
 - name: Determine if fixed port or range
   set_fact:
@@ -53,7 +53,7 @@
     log_driver: json-file
     log_options:
       max-size: 10m
-      max-file: 10
+      max-file: '10'
 
     volumes: "{{ _postfix_container_volumes }}"
 
@@ -73,5 +73,5 @@
 
 - name: Define the postfixer port if it is not defined yet
   set_fact:
-    postfixer_port: docker_container.container.HostConfig.PortBindings['8000/tcp'].HostPort
+    postfixer_port: "{{ postfixer_container.container.NetworkSettings.Ports['8000/tcp'][0].HostPort }}"
   when: postfixer_port is not defined
