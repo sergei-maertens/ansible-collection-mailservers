@@ -11,14 +11,24 @@
   docker_volume:
     name: "{{ postfixer_name_prefix }}-logs"
 
-- name: Determine if fixed port or range
-  set_fact:
-    _postfix_host_port: "{{ postfixer_port if postfixer_port is defined else postfixer_ports }}"
-
 - name: Determine volumes to mount
   set_fact:
     _postfix_container_volumes: "{{ __postfixer_base_volumes + [postfixer_db_host] }}"
   when: postfixer_db_host.startswith('/')
+
+- name: Determine existing published port
+  docker_container_info:
+    name: "{{ postfixer_name_prefix }}-web"
+  register: docker_container
+
+- name: Define existing published port
+  set_fact:
+    postfixer_port: docker_container.container.HostConfig.PortBindings['8000/tcp'].HostPort
+  when: docker_container.exists and not postfixer_port is defined
+
+- name: Determine if fixed port or range
+  set_fact:
+    _postfix_host_port: "{{ postfixer_port if postfixer_port is defined else postfixer_ports }}"
 
 - name: Ensure web container runs
   docker_container:
@@ -58,3 +68,10 @@
 
     published_ports:
       - "127.0.0.1:{{ _postfix_host_port }}:8000"
+
+  register: postfixer_container
+
+- name: Define the postfixer port if it is not defined yet
+  set_fact:
+    postfixer_port: docker_container.container.HostConfig.PortBindings['8000/tcp'].HostPort
+  when: postfixer_port is not defined
