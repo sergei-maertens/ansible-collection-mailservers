@@ -1,0 +1,15 @@
+---
+
+postfixer_port: 9010
+
+postfixer_image: regexit/postfixer:latest
+
+postfixer_db_host: /var/run/postgresql/
+postfixer_db_port: 5432
+postfixer_db_name: postfix
+postfixer_db_user: postfix
+postfixer_db_password: postfix
+
+postfixer_hostname: postfixer.example.com
+
+postfixer_postgresql_version: 10

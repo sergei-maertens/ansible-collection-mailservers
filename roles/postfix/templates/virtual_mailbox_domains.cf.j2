@@ -1,0 +1,25 @@
+#
+# main.cf entry:
+# virtual_mailbox_domains = pgsql:/path/to/this/file.cf
+#
+
+#
+# The hosts that Postfix will try to connect to
+hosts = localhost
+
+# The user name and password to log into the pgsql server.
+user = {{ postfix_db_user }}
+password = {{ postfix_db_password }}
+
+# The database name on the servers.
+dbname = {{ postfix_db_name }}
+
+query = (
+    SELECT DISTINCT "mail_forward"."domain_part"
+    FROM "mail_forward"
+    WHERE ("mail_forward"."active" = True AND "mail_forward"."domain_part" = '%s')
+    ) UNION (
+    SELECT DISTINCT "mail_virtualmailbox"."domain_part" FROM "mail_virtualmailbox"
+    WHERE ("mail_virtualmailbox"."active" = True AND "mail_virtualmailbox"."domain_part" = '%s')
+    )
+

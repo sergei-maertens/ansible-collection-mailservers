@@ -1,0 +1,9 @@
+---
+
+- name: reload postfix
+  service:
+    name: postfix
+    state: reloaded
+
+- name: postmap virtual
+  shell: postmap /etc/postfix/virtual

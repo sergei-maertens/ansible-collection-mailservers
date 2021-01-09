@@ -1,0 +1,18 @@
+driver = pgsql
+connect = host={{ dovecot_db_host }} dbname={{ dovecot_db_name }} user={{ dovecot_db_user }} password={{ dovecot_db_password }}
+
+default_pass_scheme = PLAIN
+
+password_query = \
+    SELECT CONCAT("user_part", '@', "domain_part") AS username, password \
+    FROM mail_virtualmailbox \
+    WHERE user_part = '%n' AND domain_part = '%d' AND "active" = True
+
+user_query = SELECT \
+    CONCAT("user_part", '@', "domain_part") AS "user", \
+    CONCAT('maildir:', '{{ dovecot_mail_basedir }}', '/', "domain_part", '/', "user_part", '/') AS "mail", \
+    CONCAT('{{ dovecot_home_basedir }}', "domain_part", '/', "user_part", '/') AS "home", \
+    {{ dovecot_user_uid }} AS uid, \
+    {{ dovecot_user_uid }} AS gid \
+    FROM mail_virtualmailbox \
+    WHERE "active" = True AND user_part = '%n' AND domain_part = '%d'

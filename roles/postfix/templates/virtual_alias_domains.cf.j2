@@ -1,0 +1,17 @@
+#
+# main.cf entry:
+# virtual_alias_domains = pgsql:/path/to/this/file.cf
+#
+
+#
+# The hosts that Postfix will try to connect to
+hosts = localhost
+
+# The user name and password to log into the pgsql server.
+user = {{ postfix_db_user }}
+password = {{ postfix_db_password }}
+
+# The database name on the servers.
+dbname = {{ postfix_db_name }}
+
+query = SELECT "mail_domain"."id" FROM "mail_domain" WHERE ("mail_domain"."active" = True AND "mail_domain"."name" = '%s')

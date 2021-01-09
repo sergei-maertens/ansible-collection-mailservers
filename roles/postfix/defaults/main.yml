@@ -1,0 +1,20 @@
+---
+
+postfix_mydomain: "{{ ansible_hostname }}"
+postfix_extra_local_networks: []
+postfix_inet_interfaces:
+  - all
+
+postfix_db_user: postfix
+postfix_db_password: postfix
+postfix_db_name: postfix
+
+postfix_dovecot_enabled: no
+postfix_vmail_postgres: no
+
+postfix_vmail_basedir: /var/mail/domains
+postfix_vmail_uid: 1005
+postfix_vmail_gid: "{{ postfix_vmail_uid }}"
+
+postfix_ssl_cert_file: /etc/ssl/certs/ssl-cert-snakeoil.pem
+postfix_ssl_key_file: /etc/ssl/private/ssl-cert-snakeoil.key

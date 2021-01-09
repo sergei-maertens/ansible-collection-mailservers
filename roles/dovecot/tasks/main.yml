@@ -1,0 +1,54 @@
+---
+
+# https://wiki.dovecot.org/HowTo/DovecotPostgresql
+
+- name: Install packages
+  apt:
+    name:
+    - dovecot-core
+    - dovecot-common
+    - dovecot-pgsql
+    - dovecot-pop3d
+    - dovecot-imapd
+    # - libpam-pgsql
+
+- name: Create the dovecot user group
+  group:
+    name: "{{ dovecot_user }}"
+    gid: "{{ dovecot_user_uid }}"
+    state: present
+
+- name: Create the mail user
+  user:
+    name: "{{ dovecot_user }}"
+    uid: "{{ dovecot_user_uid }}"
+    group: "{{ dovecot_user }}"
+    shell: /usr/sbin/nologin
+    createhome: yes
+    home: "{{ dovecot_mail_basedir }}"
+
+- name: Ensure basedirs exists and have correct permissions
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ dovecot_user }}"
+    group: "{{ dovecot_user }}"
+    mode: u=rwx,g=rwx,o=
+    follow: yes
+  with_items:
+    - "{{ dovecot_mail_basedir }}"
+    - "{{ dovecot_home_basedir }}"
+
+- name: Configure dovecot
+  template:
+    src: "{{ item }}"
+    dest: "/etc/dovecot/{{ item }}"
+    mode: 0600
+  with_items:
+    - conf.d/10-auth.conf
+    - conf.d/10-master.conf
+    - conf.d/10-ssl.conf
+    - conf.d/auth-sql.conf.ext
+    - dovecot-sql.conf.ext
+  notify:
+    - reload dovecot
