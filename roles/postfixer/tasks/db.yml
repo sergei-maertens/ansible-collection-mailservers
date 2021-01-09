@@ -5,8 +5,11 @@
     database: "{{ postfixer_db_name }}"
     port: "{{ postfixer_db_port }}"
     roles: "{{ postfixer_db_user }}"
-    type: table
+    type: "{{ item }}"
     objs: ALL_IN_SCHEMA
     privs: ALL
+  loop:
+    - table
+    - sequence
   become: yes
   become_user: postgres
