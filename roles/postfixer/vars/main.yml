@@ -1,0 +1,4 @@
+---
+
+__postfixer_base_volumes:
+  - "{{ postfixer_name_prefix }}-logs:/app/log:rw"

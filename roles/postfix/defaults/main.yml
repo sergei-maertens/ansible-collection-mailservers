@@ -8,6 +8,8 @@ postfix_inet_interfaces:
 postfix_db_user: postfix
 postfix_db_password: postfix
 postfix_db_name: postfix
+# See http://www.postfix.org/pgsql_table.5.html
+postfix_db_hosts: localhost:5432
 
 postfix_dovecot_enabled: no
 postfix_vmail_postgres: no

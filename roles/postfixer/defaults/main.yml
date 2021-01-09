@@ -1,8 +1,13 @@
 ---
 
-postfixer_port: 9010
+# postfixer_port: 8000  # Specify explicitly, or use a range and the fact will be set
+postfixer_ports: '[8000-9000]'
 
-postfixer_image: regexit/postfixer:latest
+postfixer_name_prefix: postfixer
+postfixer_network: "{{ postfixer_name_prefix }}"
+postfixer_image: docker.io/regexit/postfixer:latest
+
+postfixer_image_pull: yes
 
 postfixer_db_host: /var/run/postgresql/
 postfixer_db_port: 5432
@@ -11,5 +16,4 @@ postfixer_db_user: postfix
 postfixer_db_password: postfix
 
 postfixer_hostname: postfixer.example.com
-
-postfixer_postgresql_version: 10
+# postfixer_secret_key: change-mde
