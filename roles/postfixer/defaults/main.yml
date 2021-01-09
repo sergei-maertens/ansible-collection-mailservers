@@ -1,7 +1,7 @@
 ---
 
 # postfixer_port: 8000  # Specify explicitly, or use a range and the fact will be set
-postfixer_ports: '[8000-9000]'
+postfixer_ports: '8000-9000'
 
 postfixer_name_prefix: postfixer
 postfixer_network: "{{ postfixer_name_prefix }}"
