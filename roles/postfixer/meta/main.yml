@@ -1,0 +1,34 @@
+galaxy_info:
+  author: Sergei Maertens
+  description: Set up Postfixer to manage virtual mailboxes
+  company: Regex IT
+
+  issue_tracker_url: https://github.com/sergei-maertens/ansible-collection-mailservers/issues
+
+  license: MIT
+
+  min_ansible_version: '2.9'
+
+  # If this a Container Enabled role, provide the minimum Ansible Container version.
+  # min_ansible_container_version:
+
+  # Optionally specify the branch Galaxy will use when accessing the GitHub
+  # repo for this role. During role install, if no tags are available,
+  # Galaxy will use this branch. During import Galaxy will access files on
+  # this branch. If Travis integration is configured, only notifications for this
+  # branch will be accepted. Otherwise, in all cases, the repo's default branch
+  # (usually master) will be used.
+  github_branch: main
+
+  platforms:
+    # Debian and derivatives
+    - name: Debian
+      versions:
+        - buster
+    - name: Ubuntu
+      versions:
+        - bionic
+
+  galaxy_tags: []
+
+dependencies: []
