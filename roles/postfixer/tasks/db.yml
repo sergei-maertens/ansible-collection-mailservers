@@ -1,0 +1,12 @@
+---
+
+- name: Set DB user privileges
+  postgresql_privs:
+    database: "{{ postfixer_db_name }}"
+    port: "{{ postfixer_db_port }}"
+    roles: "{{ postfixer_db_user }}"
+    type: table
+    objs: ALL_IN_SCHEMA
+    privs: ALL
+  become: yes
+  become_user: postgres
