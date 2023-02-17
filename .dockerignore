@@ -1,0 +1,6 @@
+/docs
+/plugins
+/roles
+.dockerignore
+.gitignore
+*.tar.gz

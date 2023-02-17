@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  server:
+    build:
+      context: .
+      args:
+        BASE: debian:bullseye-slim
+    image: regexit/mailserver-collection-server
+    ports:
+      - '2222:22'
