@@ -1,0 +1,15 @@
+---
+
+- name: Derive OS-specific facts (Debian bullseye)
+  ansible.builtin.set_fact:
+    _postfix_default_compatibility_level: '2'
+  when:
+    - ansible_facts['distribution'] == 'Debian'
+    - ansible_facts['distribution_major_version'] == '11'  # bullseye
+
+- name: Derive OS-specific facts (Ubuntu)
+  ansible.builtin.set_fact:
+    _postfix_default_compatibility_level: '3.6'
+  when:
+    - ansible_facts['distribution'] == 'Ubuntu'
+    - ansible_facts['distribution_major_version'] == '22'  # jammy
