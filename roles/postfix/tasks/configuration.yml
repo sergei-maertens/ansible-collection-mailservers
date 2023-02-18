@@ -1,0 +1,7 @@
+---
+
+- name: Ensure mailname is set correctly
+  copy:
+    dest: /etc/mailname
+    backup: yes
+    content: "{{ postfix_myhostname }}"

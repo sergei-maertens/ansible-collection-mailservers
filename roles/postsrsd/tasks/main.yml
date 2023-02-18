@@ -1,0 +1,13 @@
+---
+
+- name: Install postsrsd package
+  ansible.builtin.package:
+    name: postsrsd
+    state: present
+
+- name: Template out configuration
+  ansible.builtin.template:
+    src: postsrsd.j2
+    dest: /etc/default/postsrsd
+  notify:
+    - restart postsrsd

@@ -1,25 +1,12 @@
 ---
 
+- import_tasks: set_facts.yml
+- import_tasks: configuration.yml
 
-- name: Derive OS-specific facts (Debian bullseye)
-  ansible.builtin.set_fact:
-    _postfix_default_compatibility_level: '2'
-  when:
-    - ansible_facts['ansible_distribution'] == 'Debian'
-    - ansible_facts['ansible_distribution_major_version'] == '11'  # bullseye
-
-- name: Derive OS-specific facts (Ubuntu)
-  ansible.builtin.set_fact:
-    _postfix_default_compatibility_level: '3.6'
-  when:
-    - ansible_facts['ansible_distribution'] == 'Ubuntu'
-    - ansible_facts['ansible_distribution_major_version'] == '22'  # jammy
-
-- name: Ensure mailname is set correctly
-  copy:
-    dest: /etc/mailname
-    backup: yes
-    content: "{{ postfix_myhostname }}"
+# Set up postsrsd
+- ansible.builtin.include_role:
+    name: sergei_maertens.mailservers.postsrsd
+  when: postfix_srsd_enabled
 
 - name: Install postfix
   package:

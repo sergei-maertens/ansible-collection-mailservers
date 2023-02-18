@@ -1,6 +1,6 @@
 galaxy_info:
   author: Sergei Maertens
-  description: Set up Postfixer to manage virtual mailboxes
+  description: Install and configure postsrsd
   company: Regex IT
 
   issue_tracker_url: https://github.com/sergei-maertens/ansible-collection-mailservers/issues
@@ -24,10 +24,11 @@ galaxy_info:
     # Debian and derivatives
     - name: Debian
       versions:
-        - buster
+        - bullseye
+        - bookworm
     - name: Ubuntu
       versions:
-        - bionic
+        - jammy
 
   galaxy_tags: []
 

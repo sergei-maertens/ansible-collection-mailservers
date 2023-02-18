@@ -1,0 +1,6 @@
+---
+
+postsrsd_domain: ''  # default is taken from `postconf -h mydomain`
+postsrsd_ports:
+  forward: 10001
+  reverse: 10002

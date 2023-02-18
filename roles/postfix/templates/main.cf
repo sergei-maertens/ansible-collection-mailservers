@@ -80,3 +80,26 @@ virtual_minimum_uid = 1000
 virtual_uid_maps = static:{{ postfix_vmail_uid }}
 virtual_gid_maps = static:{{ postfix_vmail_gid }}
 {% endif %}
+
+{% if postfix_spf_enabled %}
+# Check SPF on incoming e-mail
+policy-spf_time_limit = {{ postfix_spf_time_limit }}
+{% endif %}
+
+{% if postfix_srsd_enabled %}
+# SRS rewriting (postsrsd)
+sender_canonical_maps = {{ postfix_srsd_sender_canonical_maps }}
+sender_canonical_classes = envelope_sender
+recipient_canonical_maps = {{ postfix_srsd_recipient_canonical_maps }}
+recipient_canonical_classes= envelope_recipient,header_recipient
+{% endif %}
+
+{% if postfix_milters %}
+# Milters
+milter_default_action = accept
+milter_protocol = 6
+milter_connect_macros = i j {daemon_name} {daemon_addr} v {if_name} _
+smtpd_milters = {{ postfix_milters|join(',') }}
+non_smtpd_milters = $smtpd_milters
+internal_mail_filter_classes = bounce
+{% endif %}
