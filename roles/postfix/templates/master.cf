@@ -1,4 +1,5 @@
-# {{ ansible_managed }}
+# {{ ansible_managed }} - based on Debian 11 (bullseye) config. Ubuntu 22.04 has some
+# additional commented out lines.
 #
 # Postfix master process configuration file.  For details on the format
 # of the file, see the master(5) manual page (command: "man 5 master" or
@@ -65,6 +66,7 @@ virtual   unix  -       n       n       -       -       virtual
 lmtp      unix  -       -       y       -       -       lmtp
 anvil     unix  -       -       y       -       1       anvil
 scache    unix  -       -       y       -       1       scache
+postlog   unix-dgram n  -       n       -       1       postlogd
 #
 # ====================================================================
 # Interfaces to non-Postfix software. Be sure to examine the manual
@@ -79,7 +81,7 @@ scache    unix  -       -       y       -       1       scache
 # Also specify in main.cf: maildrop_destination_recipient_limit=1
 #
 maildrop  unix  -       n       n       -       -       pipe
-  flags=DRhu user=vmail argv=/usr/bin/maildrop -d ${recipient}
+  flags=DRXhu user=vmail argv=/usr/bin/maildrop -d ${recipient}
 #
 # ====================================================================
 #
@@ -98,7 +100,7 @@ maildrop  unix  -       n       n       -       -       pipe
 # Also specify in main.cf: cyrus_destination_recipient_limit=1
 #
 #cyrus     unix  -       n       n       -       -       pipe
-#  user=cyrus argv=/cyrus/bin/deliver -e -r ${sender} -m ${extension} ${user}
+#  flags=DRX user=cyrus argv=/cyrus/bin/deliver -e -r ${sender} -m ${extension} ${user}
 #
 # ====================================================================
 # Old example of delivery via Cyrus.
@@ -119,9 +121,11 @@ ifmail    unix  -       n       n       -       -       pipe
   flags=F user=ftn argv=/usr/lib/ifmail/ifmail -r $nexthop ($recipient)
 bsmtp     unix  -       n       n       -       -       pipe
   flags=Fq. user=bsmtp argv=/usr/lib/bsmtp/bsmtp -t$nexthop -f$sender $recipient
-scalemail-backend unix  -   n   n   -   2   pipe
+scalemail-backend unix  -       n       n       -       2       pipe
   flags=R user=scalemail argv=/usr/lib/scalemail/bin/scalemail-store ${nexthop} ${user} ${extension}
 mailman   unix  -       n       n       -       -       pipe
-  flags=FR user=list argv=/usr/lib/mailman/bin/postfix-to-mailman.py
-  ${nexthop} ${user}
-
+  flags=FRX user=list argv=/usr/lib/mailman/bin/postfix-to-mailman.py ${nexthop} ${user}
+{% if postfix_policyd_spf_enabled %}
+policy-spf  unix  -     n       n       -       -       spawn
+  user=nobody argv=/usr/bin/policyd-spf
+{% endif %}

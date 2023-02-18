@@ -8,43 +8,12 @@
     name: sergei_maertens.mailservers.postsrsd
   when: postfix_srsd_enabled
 
-- name: Install postfix
-  package:
-    name:
-    - postfix
-    - postfix-pgsql
+# Set up policyd-spf
+- ansible.builtin.include_role:
+    name: sergei_maertens.mailservers.policyd_spf
+  when: postfix_policyd_spf_enabled
 
-- name: Create dir for pgsql configs
-  file:
-    path: /etc/postfix/pgsql
-    state: directory
-  when: postfix_vmail_postgres
+- import_tasks: install.yml
+- import_tasks: firewall.yml
 
-- name: Template out the PGSQL virtal aliases
-  template:
-    src: "{{ item }}.cf.j2"
-    dest: "/etc/postfix/pgsql/{{ item }}.cf"
-  with_items:
-    - virtual_alias_domains
-    - virtual_alias_map
-    - virtual_mailbox_domains
-    - virtual_mailbox_maps
-  when: postfix_vmail_postgres
 
-- name: Set up the postfix config
-  template:
-    src: "{{ item }}"
-    dest: "/etc/postfix/{{ item }}"
-  with_items:
-    - main.cf
-    - master.cf
-  notify:
-    - reload postfix
-
-- name: Open firewall ports
-  ufw:
-    rule: allow
-    port: "{{ item }}"
-  with_items:
-    - smtp
-    - 587

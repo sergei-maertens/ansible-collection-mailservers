@@ -1,0 +1,4 @@
+---
+
+policyd_spf_internal_addresses:
+  - 172.16.0.0/12  # docker network ranges

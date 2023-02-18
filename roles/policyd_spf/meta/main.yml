@@ -2,7 +2,7 @@
 
 galaxy_info:
   author: Sergei Maertens
-  description: Install and configure postsrsd
+  description: Install and configure postfix-policyd-spf-python
   company: Regex IT
 
   issue_tracker_url: https://github.com/sergei-maertens/ansible-collection-mailservers/issues

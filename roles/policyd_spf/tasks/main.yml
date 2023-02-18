@@ -1,0 +1,11 @@
+---
+
+- name: Install postfix-policyd-spf-python package
+  ansible.builtin.package:
+    name: postfix-policyd-spf-python
+    state: present
+
+- name: Template out configuration
+  ansible.builtin.template:
+    src: policyd-spf.conf.j2
+    dest: /etc/postfix-policyd-spf-python/policyd-spf.conf

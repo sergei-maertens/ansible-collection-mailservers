@@ -36,7 +36,12 @@ smtp_tls_security_level = may
 smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
 
 
-smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated defer_unauth_destination
+smtpd_relay_restrictions =
+    permit_mynetworks
+    permit_sasl_authenticated
+    defer_unauth_destination
+    {% if postfix_policyd_spf_enabled %}check_policy_service unix:private/policy-spf{% endif %}
+
 myhostname = {{ postfix_myhostname }}  # should be machine/system name
 alias_maps = hash:/etc/aliases
 alias_database = hash:/etc/aliases
@@ -81,9 +86,9 @@ virtual_uid_maps = static:{{ postfix_vmail_uid }}
 virtual_gid_maps = static:{{ postfix_vmail_gid }}
 {% endif %}
 
-{% if postfix_spf_enabled %}
+{% if postfix_policyd_spf_enabled %}
 # Check SPF on incoming e-mail
-policy-spf_time_limit = {{ postfix_spf_time_limit }}
+policy-spf_time_limit = {{ postfix_policyd_spf_time_limit }}
 {% endif %}
 
 {% if postfix_srsd_enabled %}

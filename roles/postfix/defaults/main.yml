@@ -34,8 +34,8 @@ postfix_vmail_uid: 1005
 postfix_vmail_gid: "{{ postfix_vmail_uid }}"
 
 ## SPF checking
-postfix_spf_enabled: no
-postfix_spf_time_limit: 3600s
+postfix_policyd_spf_enabled: no
+postfix_policyd_spf_time_limit: 3600s
 
 ## SRS rewriting with postsrsd
 postfix_srsd_enabled: no

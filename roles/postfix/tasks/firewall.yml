@@ -1,0 +1,14 @@
+---
+
+- name: Check if ufw is installed
+  ansible.builtin.package_facts:
+    manager: 'auto'
+
+- name: Open firewall ports
+  ufw:
+    rule: allow
+    port: "{{ item }}"
+  with_items:
+    - smtp
+    - 587
+  when: "'ufw' in ansible_facts.packages"
