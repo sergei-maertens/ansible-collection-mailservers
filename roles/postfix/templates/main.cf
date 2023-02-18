@@ -1,5 +1,6 @@
-# Ansible managed
-#
+# {{ ansible_managed }} - Based on Debian 11 and Ubuntu 22.04 default config files.
+# Comments below are from upstream packages.
+
 # See /usr/share/postfix/main.cf.dist for a commented, more complete version
 
 
@@ -19,19 +20,38 @@ append_dot_mydomain = no
 
 readme_directory = no
 
-# See http://www.postfix.org/COMPATIBILITY_README.html -- default to 2 on
+# See http://www.postfix.org/COMPATIBILITY_README.html -- default to {{ _postfix_default_compatibility_level }} on
 # fresh installs.
-compatibility_level = 2
+compatibility_level = {{ _postfix_default_compatibility_level }}
+
+
 
 # TLS parameters
 smtpd_tls_cert_file={{ postfix_ssl_cert_file }}
 smtpd_tls_key_file={{ postfix_ssl_key_file }}
-smtpd_use_tls=yes
-smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
 smtpd_tls_security_level = may
 
+smtp_tls_CApath=/etc/ssl/certs
 smtp_tls_security_level = may
 smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+
+
+smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated defer_unauth_destination
+myhostname = {{ postfix_myhostname }}  # should be machine/system name
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+myorigin = /etc/mailname
+mydestination = $myhostname localhost.$mydomain localhost
+relayhost =
+mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128{{ ' ' + postfix_extra_local_networks|join(' ') }}
+mailbox_size_limit = 0
+recipient_delimiter = +
+inet_interfaces = {{ postfix_inet_interfaces|join(", ") }}
+inet_protocols = {{ postfix_inet_protocols|join(", ") }}
+
+#
+# CUSTOM CONFIGURATION FROM HERE ON
+#
 
 {% if postfix_dovecot_enabled %}
 # Dovecot config
@@ -44,34 +64,10 @@ smtpd_recipient_restrictions =
 smtpd_sasl_path = private/auth
 {% endif %}
 
-# See /usr/share/doc/postfix/TLS_README.gz in the postfix-doc package for
-# information on enabling SSL in the smtp client.
-
-smtpd_relay_restrictions =
-    permit_mynetworks
-    permit_sasl_authenticated
-    defer_unauth_destination
-myhostname = {{ postfix_mydomain }}
-mydomain = {{ postfix_mydomain }}
-alias_maps = hash:/etc/aliases
-alias_database = hash:/etc/aliases
-myorigin = /etc/mailname
-mydestination =
-    {{ postfix_mydomain }}
-    localhost.{{ postfix_mydomain }}
-    localhost
-relayhost =
-mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128 {{ postfix_extra_local_networks|join(' ') }}
-
-mailbox_size_limit = 0
-recipient_delimiter = +
-inet_interfaces = {{ postfix_inet_interfaces|join(", ") }}
-inet_protocols = ipv4
-
 {% if postfix_vmail_postgres %}
 # Virtual aliases (=forwarders)
 # can't use virtual_alias_domains together with virtual_mailbox_domains -
-# virtual_mailbox_domains does enough and the query looks up the alias domains
+# virtual_mailbox_domains covers this - the query looks up the alias domains
 # as well.
 # virtual_alias_domains = pgsql:/etc/postfix/pgsql/virtual_alias_domains.cf
 virtual_alias_maps = pgsql:/etc/postfix/pgsql/virtual_alias_map.cf
