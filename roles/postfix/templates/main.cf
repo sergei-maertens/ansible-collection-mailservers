@@ -99,12 +99,12 @@ recipient_canonical_maps = {{ postfix_srsd_recipient_canonical_maps }}
 recipient_canonical_classes= envelope_recipient,header_recipient
 {% endif %}
 
-{% if postfix_milters %}
+{% if _postfix_milters %}
 # Milters
 milter_default_action = accept
 milter_protocol = 6
 milter_connect_macros = i j {daemon_name} {daemon_addr} v {if_name} _
-smtpd_milters = {{ postfix_milters|join(',') }}
+smtpd_milters = {{ _postfix_milters|join(',') }}
 non_smtpd_milters = $smtpd_milters
 internal_mail_filter_classes = bounce
 {% endif %}
