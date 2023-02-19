@@ -1,0 +1,46 @@
+---
+
+# Inspired on https://github.com/ansible-collections/community.zabbix/blob/main/.github/workflows/repo-sanity.yml
+
+name: Run checks on collection
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - '*'
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  sanity-tests:
+    name: Run Sanity tests
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python:
+          - '3.9'
+          - '3.10'
+        ansible:
+          - '2.12'
+          - '2.13'
+          - '2.14'
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          path: ansible_collections/sergei_maertens/mailservers
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install dependencies
+        run: pip install ansible-core~=${{ matrix.ansible }}
+
+      - name: Run sanity tests
+        run: |
+          ansible-test sanity -v --color --python ${{ matrix.python }}
+        working-directory: ./ansible_collections/sergei_maertens/mailservers
