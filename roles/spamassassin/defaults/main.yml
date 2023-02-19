@@ -1,0 +1,6 @@
+---
+
+spamassassin_reject_score: 8
+spamassassin_maximum_message_size: 10485760
+spamassassin_cron: 1
+spamassassin_extra_options: ' -x -u vmail'  # assuming a user vmail exists for virtual mailboxes

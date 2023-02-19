@@ -1,0 +1,8 @@
+---
+
+- ansible.builtin.include_role:
+    name: sergei_maertens.mailservers.spamassassin
+
+- name: Add SpamAssassin milter
+  ansible.builtin.set_fact:
+    _postfix_milters: "{{ _postfix_milters + ['unix:' + postfix_spamassassin_socket] }}"
