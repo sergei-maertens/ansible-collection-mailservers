@@ -42,6 +42,9 @@ postfix_srsd_enabled: no
 postfix_srsd_sender_canonical_maps: tcp:localhost:{{ postsrsd_ports.forward|default(10001) }}
 postfix_srsd_recipient_canonical_maps: tcp:localhost:{{ postsrsd_ports.reverse|default(10002) }}
 
+## OpenDKIM signing, PostgreSQL backend
+postfix_opendkim_enabled: no
+
 ## Spam checking/marking with SpamAssassin
 postfix_spamassassin_enabled: no
 postfix_spamassassin_socket: 'spamass/spamass.sock'  # default from /etc/init.d/spamassassin
@@ -49,4 +52,3 @@ postfix_spamassassin_socket: 'spamass/spamass.sock'  # default from /etc/init.d/
 # Additional milters that need to be included. Note that SpamAssassin/OpenDKIM milters
 # are automatically added.
 postfix_milters: []
-  # - unix:opendkim/opendkim.sock

@@ -1,0 +1,8 @@
+---
+
+- ansible.builtin.include_role:
+    name: sergei_maertens.mailservers.opendkim
+
+- name: Add SpamAssassin milter
+  ansible.builtin.set_fact:
+    _postfix_milters: "{{ _postfix_milters + ['unix:opendkim/opendkim.sock'] }}"

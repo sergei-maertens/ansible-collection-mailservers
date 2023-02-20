@@ -1,0 +1,5 @@
+---
+
+_opendkim_db_creds: "{% if opendkim_db_user %}{{ opendkim_db_user }}{% if opendkim_db_password %}:{{ opendkim_db_password }}{% endif %}{% endif %}"
+_opendkim_db_conn: "{% if opendkim_db_port %}{{ opendkim_db_port }}+{% endif %}{{ opendkim_db_host }}/{{ opendkim_db_name }}"
+_opendkim_db_dsn: "dsn:pgsql://{% if _opendkim_db_creds %}{{ _opendkim_db_creds }}@{% endif %}{{ _opendkim_db_conn }}/"

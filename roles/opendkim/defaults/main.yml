@@ -1,0 +1,20 @@
+---
+
+opendkim_db_name: postfix
+opendkim_db_host: localhost
+opendkim_db_port: 5432
+opendkim_db_user: postgres
+opendkim_db_password: ''
+
+# Defaults assume an installation of postfixer with the matching Django model tables.
+
+opendkim_signing_table: dkim_dkimkey
+opendkim_signing_keycol: domain_name
+opendkim_signing_datacol: id
+
+opendkim_keys_table: dkim_dkimkey
+opendkim_keys_keycol: id
+opendkim_keys_datacol: domain_name,selector,private_key
+
+opendkim_internal_addresses:
+  - 172.16.0.0/12  # docker network ranges

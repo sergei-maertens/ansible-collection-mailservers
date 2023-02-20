@@ -1,0 +1,7 @@
+# {{ ansible_managed }}
+127.0.0.1
+::1
+localhost
+{% for addr in opendkim_internal_addresses %}
+{{ addr }}
+{% endfor %}
