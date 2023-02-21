@@ -1,6 +1,15 @@
 version: '3.8'
 
 services:
+  db:
+    image: postgres:${PG_VERSION:-14}
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    volumes:
+      - db:/var/lib/postgresql/data
+    ports:
+      - '5434:5432'
+
   server:
     build:
       context: .
@@ -9,3 +18,6 @@ services:
     image: regexit/mailserver-collection-server
     ports:
       - '2222:22'
+
+volumes:
+  db:

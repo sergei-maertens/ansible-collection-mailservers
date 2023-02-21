@@ -13,6 +13,10 @@
     name: sergei_maertens.mailservers.policyd_spf
   when: postfix_policyd_spf_enabled
 
+# Set up OpenDKIM
+- ansible.builtin.include_tasks: opendkim.yml
+  when: postfix_opendkim_enabled
+
 # Set up SpamAssassin
 - ansible.builtin.include_tasks: spamassassin.yml
   when: postfix_spamassassin_enabled

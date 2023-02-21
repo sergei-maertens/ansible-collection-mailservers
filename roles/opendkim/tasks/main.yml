@@ -1,0 +1,56 @@
+---
+
+- name: Install package
+  package:
+    state: present
+    name:
+      - opendkim
+      - opendkim-tools
+      - libopendbx1-pgsql
+      - python3-psycopg2
+
+- name: Create bodylengthdb.cfg
+  ansible.builtin.copy:
+    dest: /etc/mail/bodylengthdb.cfg
+    content: '.*'
+    owner: root
+    group: root
+  notify:
+    - restart opendkim
+
+- name: Template out internal hosts
+  ansible.builtin.template:
+    src: trustedhosts.j2
+    dest: /etc/dkimkeys/trustedhosts
+  notify:
+    - restart opendkim
+
+- name: Template out configuration
+  ansible.builtin.template:
+    src: opendkim.conf.j2
+    dest: /etc/opendkim.conf
+  notify:
+    - restart opendkim
+
+# Ideally, the DB tables are provisioned beforehand via postfixer
+- name: Check if DB tables exist (required to start/restart opendkim service)
+  community.postgresql.postgresql_query:
+    db: "{{ opendkim_db_name }}"
+    login_host: "{{ opendkim_db_host }}"
+    login_port: "{{ opendkim_db_port }}"
+    login_user: "{{ opendkim_db_user }}"
+    login_password: "{{ opendkim_db_password }}"
+    query: "SELECT 1 FROM {{ item }}"
+  loop:
+    - "{{ opendkim_signing_table }}"
+    - "{{ opendkim_keys_table }}"
+  retries: 10
+  delay: 3
+  register: query_result
+  until: query_result is successful
+
+- name: Start and enable service
+  service:
+    name: opendkim
+    state: started
+    enabled: true
