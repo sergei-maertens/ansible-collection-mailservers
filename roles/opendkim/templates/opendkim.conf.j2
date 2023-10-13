@@ -1,4 +1,4 @@
-# {{ ansible_managed }} - Based on Debian 11 (bullseye) default configuration.
+# {{ ansible_managed }} - Based on Ubuntu 22.04/Debian 12 (bookworm) default configuration.
 
 # This is a basic configuration for signing and verifying. It can easily be
 # adapted to suit a basic installation. See opendkim.conf(5) and
@@ -16,6 +16,8 @@ Canonicalization    relaxed/simple
 #Mode           sv
 #SubDomains     no
 OversignHeaders     From
+On-BadSignature         reject
+BodyLengthDB            file:/etc/mail/bodylengthdb.cfg
 
 # Signing domain, selector, and key (required). For example, perform signing
 # for domain "example.com" with selector "2020" (2020._domainkey.example.com),
@@ -24,6 +26,10 @@ OversignHeaders     From
 #Domain         example.com
 #Selector       2020
 #KeyFile        /etc/dkimkeys/example.private
+
+KeyTable                {{ _opendkim_db_dsn }}table={{ opendkim_keys_table }}?keycol={{ opendkim_keys_keycol }}?datacol={{ opendkim_keys_datacol }}
+SigningTable            {{ _opendkim_db_dsn }}table={{ opendkim_signing_table }}?keycol={{ opendkim_signing_keycol }}?datacol={{ opendkim_signing_datacol }}
+InternalHosts           refile:/etc/dkimkeys/trustedhosts
 
 # In Debian, opendkim runs as user "opendkim". A umask of 007 is required when
 # using a local socket with MTAs that access the socket as a non-privileged
@@ -36,10 +42,10 @@ UMask           007
 # it must be ensured that the socket is accessible. In Debian, Postfix runs in
 # a chroot in /var/spool/postfix, therefore a Unix socket would have to be
 # configured as shown on the last line below.
-#Socket          local:/run/opendkim/opendkim.sock
+#Socket         local:/run/opendkim/opendkim.sock
 #Socket         inet:8891@localhost
 #Socket         inet:8891
-Socket         local:/var/spool/postfix/opendkim/opendkim.sock
+Socket          local:/var/spool/postfix/opendkim/opendkim.sock
 
 PidFile         /run/opendkim/opendkim.pid
 
@@ -51,13 +57,3 @@ PidFile         /run/opendkim/opendkim.pid
 # by the package dns-root-data.
 TrustAnchorFile     /usr/share/dns/root.key
 #Nameservers        127.0.0.1
-
-#
-# Extra configuration
-#
-On-BadSignature         reject
-BodyLengthDB            file:/etc/mail/bodylengthdb.cfg
-
-SigningTable            {{ _opendkim_db_dsn }}table={{ opendkim_signing_table }}?keycol={{ opendkim_signing_keycol }}?datacol={{ opendkim_signing_datacol }}
-KeyTable                {{ _opendkim_db_dsn }}table={{ opendkim_keys_table }}?keycol={{ opendkim_keys_keycol }}?datacol={{ opendkim_keys_datacol }}
-InternalHosts           refile:/etc/dkimkeys/trustedhosts
