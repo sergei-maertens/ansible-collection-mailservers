@@ -22,7 +22,7 @@ role tests for this using a retry loop. It's recommended to use postfixer and th
 automatic migrations or provision the database and table in a different way BEFORE
 this role is invoked.
 
-A database user with read permissions on the key/singning table(s) is required.
+A database user with read permissions on the key/signing table(s) is required.
 
 Role variables
 --------------
