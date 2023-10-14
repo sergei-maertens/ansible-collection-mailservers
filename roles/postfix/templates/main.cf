@@ -42,7 +42,8 @@ smtpd_relay_restrictions =
     defer_unauth_destination
     {% if postfix_policyd_spf_enabled %}check_policy_service unix:private/policy-spf{% endif %}
 
-myhostname = {{ postfix_myhostname }}  # should be machine/system name
+# should be machine/system name
+myhostname = {{ postfix_myhostname }}
 alias_maps = hash:/etc/aliases
 alias_database = hash:/etc/aliases
 myorigin = /etc/mailname
