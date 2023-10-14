@@ -27,9 +27,10 @@ jobs:
           - '2.12'
           - '2.13'
           - '2.14'
+          - '2.15'
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           path: ansible_collections/sergei_maertens/mailservers
 
