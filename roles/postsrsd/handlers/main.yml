@@ -3,4 +3,4 @@
 - name: restart postsrsd
   ansible.builtin.service:
     name: postsrsd
-    state: reloaded
+    state: restarted
