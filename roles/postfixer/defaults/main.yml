@@ -1,13 +1,8 @@
 ---
 
-# postfixer_port: 8000  # Specify explicitly, or use a range and the fact will be set
-postfixer_ports: "8000-9000"
-
 postfixer_name_prefix: postfixer
-postfixer_network: "{{ postfixer_name_prefix }}"
-postfixer_image: docker.io/regexit/postfixer:latest
-
-postfixer_image_pull: yes
+postfixer_hostname: postfixer.example.com
+# postfixer_secret_key: change-mde
 
 postfixer_db_host: /var/run/postgresql/
 postfixer_db_port: 5432
@@ -15,7 +10,14 @@ postfixer_db_name: postfix
 postfixer_db_user: postfix
 postfixer_db_password: postfix
 
-postfixer_hostname: postfixer.example.com
-# postfixer_secret_key: change-mde
+postfixer_sentry_dsn: null
 
+postfixer_version: latest
+postfixer_image_name: regexit/postfixer
+postfixer_image_pull: yes
+
+postfixer_replicas: 1
+
+# Domains that may be managed by this deployed instance. Empty list -> all domains can
+# be managed.
 postfixer_allowed_domains: []

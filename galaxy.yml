@@ -42,6 +42,8 @@ tags: []
 # range specifiers can be set and are separated by ','
 dependencies:
   community.postgresql: '>=2.3.0'  # for opendkim
+  # should not be used for published collections
+  git@github.com:maykinmedia/commonground-ansible.git: '1.0.4'
 
 # The URL of the originating SCM repository
 repository: https://github.com/sergei-maertens/ansible-collection-mailservers
